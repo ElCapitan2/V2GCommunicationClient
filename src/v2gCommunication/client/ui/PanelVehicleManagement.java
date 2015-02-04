@@ -5,17 +5,21 @@
  */
 package v2gCommunication.client.ui;
 
+import v2gCommunication.client.ServerConnection;
+
 /**
  *
  * @author alexander
  */
 public class PanelVehicleManagement extends javax.swing.JPanel {
-
+    ServerConnection sc;
     /**
      * Creates new form PanelVehicleManagement
      */
     public PanelVehicleManagement() {
         initComponents();
+        this.sc = ServerConnection.getInstance();
+        this.sc.setJListVehiclesVehicleManagement(jListVehicles);
     }
 
     /**
@@ -31,7 +35,6 @@ public class PanelVehicleManagement extends javax.swing.JPanel {
         jLabelVehicleManagement = new javax.swing.JLabel();
         jButtonAddVehicle = new javax.swing.JButton();
         jButtonDeleteVehicle = new javax.swing.JButton();
-        jButtonApplyChanges = new javax.swing.JButton();
         jSplitPaneVehicleManagement = new javax.swing.JSplitPane();
         jPanelListVehicles = new javax.swing.JPanel();
         jLabelListVehciles = new javax.swing.JLabel();
@@ -46,25 +49,31 @@ public class PanelVehicleManagement extends javax.swing.JPanel {
         jLabelVehicleManagement.setText("Vehicles and Properties");
 
         jButtonAddVehicle.setText("Add Vehicle");
+        jButtonAddVehicle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddVehicleActionPerformed(evt);
+            }
+        });
 
         jButtonDeleteVehicle.setText("Delete");
+        jButtonDeleteVehicle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeleteVehicleActionPerformed(evt);
+            }
+        });
 
-        jButtonApplyChanges.setText("Apply");
+        jSplitPaneVehicleManagement.setDividerLocation(150);
 
         jLabelListVehciles.setText("Vehicles");
 
-        jListVehicles.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        jListVehicles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jListVehicles);
 
         javax.swing.GroupLayout jPanelListVehiclesLayout = new javax.swing.GroupLayout(jPanelListVehicles);
         jPanelListVehicles.setLayout(jPanelListVehiclesLayout);
         jPanelListVehiclesLayout.setHorizontalGroup(
             jPanelListVehiclesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelListVehciles, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+            .addComponent(jLabelListVehciles, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
             .addComponent(jScrollPane1)
         );
         jPanelListVehiclesLayout.setVerticalGroup(
@@ -77,7 +86,7 @@ public class PanelVehicleManagement extends javax.swing.JPanel {
 
         jSplitPaneVehicleManagement.setLeftComponent(jPanelListVehicles);
 
-        jTabbedPaneVehicleData.addTab("VehcileData", vehicleData1);
+        jTabbedPaneVehicleData.addTab("Vehicle data", vehicleData1);
 
         jSplitPaneVehicleManagement.setRightComponent(jTabbedPaneVehicleData);
 
@@ -85,19 +94,18 @@ public class PanelVehicleManagement extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButtonAddVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonDeleteVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonApplyChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabelLogoVehicleManagement)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelVehicleManagement)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jSplitPaneVehicleManagement, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonAddVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonDeleteVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelLogoVehicleManagement)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelVehicleManagement)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,15 +118,26 @@ public class PanelVehicleManagement extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddVehicle)
-                    .addComponent(jButtonDeleteVehicle)
-                    .addComponent(jButtonApplyChanges)))
+                    .addComponent(jButtonDeleteVehicle)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonAddVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddVehicleActionPerformed
+        if ((this.vehicleData1.getVIN()!=null) && (this.vehicleData1.getVehicleName()!=null)){
+            sc.addVehicle(this.vehicleData1.getVIN(), this.vehicleData1.getVehicleName());
+        }
+    }//GEN-LAST:event_jButtonAddVehicleActionPerformed
+
+    private void jButtonDeleteVehicleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteVehicleActionPerformed
+        String vehname = (String) this.jListVehicles.getSelectedValue();
+        if (vehname != null){
+            sc.deleteVehicle(vehname);
+        }
+    }//GEN-LAST:event_jButtonDeleteVehicleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddVehicle;
-    private javax.swing.JButton jButtonApplyChanges;
     private javax.swing.JButton jButtonDeleteVehicle;
     private javax.swing.JLabel jLabelListVehciles;
     private javax.swing.JLabel jLabelLogoVehicleManagement;

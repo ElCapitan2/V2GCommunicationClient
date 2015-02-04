@@ -5,17 +5,27 @@
  */
 package v2gCommunication.client.ui;
 
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.util.ArrayList;
+import v2gCommunication.client.ServerConnection;
+
 /**
  *
  * @author alexander
  */
 public class DataAccess extends javax.swing.JPanel {
-
+    private ServerConnection sc;
     /**
-     * Creates new form VehicleAcess
+     * Creates new form VehicleAccess
+     * gets an instance of {@code ServerConnection} and adds the components.
+     * 
      */
     public DataAccess() {
         initComponents();
+        sc = ServerConnection.getInstance();
+        sc.setJListVehiclesRequestManagement(jListVehicles);
+        sc.setJListVehiclesFunctions(jListFunctions);
     }
 
     /**
@@ -33,41 +43,36 @@ public class DataAccess extends javax.swing.JPanel {
         jPanelVehicleList = new javax.swing.JPanel();
         jLabelVehicleList = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        jListVehicles = new javax.swing.JList();
         jPanelVehicleData = new javax.swing.JPanel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
-        jFormattedTextFieldStartDate = new javax.swing.JFormattedTextField();
-        jLabelFunctions = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTreeFunctions = new javax.swing.JTree();
-        jButtonRunQuery = new javax.swing.JButton();
-        jLabelData = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTableData = new javax.swing.JTable();
+        jListFunctions = new javax.swing.JList();
+        jButton1 = new javax.swing.JButton();
 
         jLabelIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/v2gCommunication/client/icons/Cars3.png"))); // NOI18N
 
         jLabelTitle.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelTitle.setText("Data Access");
 
+        jSplitPaneVehickeAccess.setDividerLocation(150);
+
         jLabelVehicleList.setText("Vehicles");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        jListVehicles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListVehiclesMouseClicked(evt);
+            }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(jListVehicles);
 
         javax.swing.GroupLayout jPanelVehicleListLayout = new javax.swing.GroupLayout(jPanelVehicleList);
         jPanelVehicleList.setLayout(jPanelVehicleListLayout);
         jPanelVehicleListLayout.setHorizontalGroup(
             jPanelVehicleListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelVehicleList, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+            .addComponent(jLabelVehicleList, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
             .addComponent(jScrollPane1)
         );
         jPanelVehicleListLayout.setVerticalGroup(
@@ -75,95 +80,62 @@ public class DataAccess extends javax.swing.JPanel {
             .addGroup(jPanelVehicleListLayout.createSequentialGroup()
                 .addComponent(jLabelVehicleList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
         );
 
         jSplitPaneVehickeAccess.setLeftComponent(jPanelVehicleList);
 
-        jLabel22.setText("VIN");
+        jLabel1.setText("Vehicle: ");
 
-        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel21.setText("Vehicle VIN:");
+        jLabel2.setText("-");
 
-        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel23.setText("Vehicle Name:");
+        jLabel3.setText("Functions: ");
 
-        jLabel24.setText("Name");
+        jScrollPane2.setViewportView(jListFunctions);
 
-        jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel25.setText("Start Date:");
-
-        jLabelFunctions.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabelFunctions.setText("Functions:");
-
-        jScrollPane2.setViewportView(jTreeFunctions);
-
-        jButtonRunQuery.setText("Run Query");
-
-        jLabelData.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabelData.setText("Data:");
-
-        jTableData.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        jButton1.setText("Download data");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
-        ));
-        jScrollPane3.setViewportView(jTableData);
+        });
 
         javax.swing.GroupLayout jPanelVehicleDataLayout = new javax.swing.GroupLayout(jPanelVehicleData);
         jPanelVehicleData.setLayout(jPanelVehicleDataLayout);
         jPanelVehicleDataLayout.setHorizontalGroup(
             jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelVehicleDataLayout.createSequentialGroup()
-                .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabelData)
-                    .addComponent(jLabelFunctions)
-                    .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonRunQuery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jFormattedTextFieldStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(10, 10, 10))
+                    .addGroup(jPanelVehicleDataLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelVehicleDataLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelVehicleDataLayout.createSequentialGroup()
+                        .addGap(0, 477, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
+                .addContainerGap())
         );
         jPanelVehicleDataLayout.setVerticalGroup(
             jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelVehicleDataLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22)
-                    .addComponent(jLabel21))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23)
-                    .addComponent(jLabel24))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel25)
-                    .addComponent(jFormattedTextFieldStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelFunctions)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonRunQuery)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelVehicleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelVehicleDataLayout.createSequentialGroup()
-                        .addComponent(jLabelData)
-                        .addContainerGap(447, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3)))
+                        .addComponent(jLabel3)
+                        .addGap(0, 251, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         jSplitPaneVehickeAccess.setRightComponent(jPanelVehicleData);
@@ -189,29 +161,68 @@ public class DataAccess extends javax.swing.JPanel {
                 .addComponent(jSplitPaneVehickeAccess))
         );
     }// </editor-fold>//GEN-END:initComponents
+    
+    
+    /**
+     * Calls {@code ServerConnection.getVehicleFunctions} in order to see what kind of data
+     * is available on the database
+     * 
+     * @param evt 
+     */
+    private void jListVehiclesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListVehiclesMouseClicked
+        ArrayList<String> vehnames = new ArrayList<String>();
+        int[] selectedIx = this.jListVehicles.getSelectedIndices();
+
+        for (int i = 0; i < selectedIx.length; i++) {
+            vehnames.add((String) jListVehicles.getModel().getElementAt(selectedIx[i]));
+        }
+        sc.getVehicleFunctions(vehnames);
+    }//GEN-LAST:event_jListVehiclesMouseClicked
+    
+    /**
+     * Calls {@code ServerConnection.downloadData} to download the information
+     * from the database
+     * 
+     * To select the storage directory a file dialog is created and shown.
+     * 
+     * @param evt 
+     */
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        FileDialog fd = new FileDialog(new Frame(), "Store File", FileDialog.SAVE);
+        fd.setVisible(true);
+        ArrayList<String> vehnames = new ArrayList<String>();
+        int[] selectedIxVh = this.jListVehicles.getSelectedIndices();
+
+        for (int i = 0; i < selectedIxVh.length; i++) {
+            vehnames.add((String) jListVehicles.getModel().getElementAt(selectedIxVh[i]));
+        }
+        ArrayList<String> functions = new ArrayList<String>();
+        int[] selectedIxFu = this.jListFunctions.getSelectedIndices();
+
+        for (int i = 0; i < selectedIxFu.length; i++) {
+            functions.add((String) jListFunctions.getModel().getElementAt(selectedIxFu[i]));
+        }
+        String fn = fd.getDirectory()+fd.getFile();
+        sc.downloadData(vehnames, functions, fn);
+        
+        fd.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonRunQuery;
-    private javax.swing.JFormattedTextField jFormattedTextFieldStartDate;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabelData;
-    private javax.swing.JLabel jLabelFunctions;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelIcon;
     private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelVehicleList;
-    private javax.swing.JList jList1;
+    private javax.swing.JList jListFunctions;
+    private javax.swing.JList jListVehicles;
     private javax.swing.JPanel jPanelVehicleData;
     private javax.swing.JPanel jPanelVehicleList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPaneVehickeAccess;
-    private javax.swing.JTable jTableData;
-    private javax.swing.JTree jTreeFunctions;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,17 +5,77 @@
  */
 package v2gCommunication.client.ui;
 
+import v2gCommunication.client.ServerConnection;
+
 /**
  *
  * @author alexander
  */
 public class PanelUserData extends javax.swing.JPanel {
+    ServerConnection sc;
 
+    //User Defined public methods for this panel.
+    public String getUserName(){
+        if (!"".equals(this.jTextFieldLogin.getText())) {
+            
+            return this.jTextFieldLogin.getText();
+        }
+        else {
+            this.jLabeNoUserNameProvided.setVisible(true);
+            return null;
+        }
+        
+    }
+    
+    public void setUserName(String userName){
+        this.jTextFieldLogin.setText(userName);
+    }
+    public String getPasswort(){
+        if (String.valueOf(this.jPasswordFieldPassword.getPassword()).equals(String.copyValueOf(this.jPasswordFieldPasswordConfirm.getPassword()))){
+            return String.valueOf(this.jPasswordFieldPassword.getPassword());
+        }
+        else {
+            this.jLabelPasswordsDoNotMatch.setVisible(true);
+            return null;
+        }
+    }
+    
+    public boolean getCanModfiyUsers(){
+        return this.jCheckBoxModifyUsers.isSelected();
+    }
+    
+    public void setCanModfiyUsers(boolean canModifyUsers){
+        this.jCheckBoxModifyUsers.setSelected(canModifyUsers);
+    }
+    
+    public boolean getCanModfiyVehicles(){
+        return this.jCheckBoxModifyVehciles.isSelected();
+    }
+    
+    public void setCanModfiyVehicles(boolean canModifyUsers){
+        this.jCheckBoxModifyVehciles.setSelected(canModifyUsers);
+    }
+    
+    public boolean getCanSendRequest(){
+        return this.jCheckBoxCanSendRequest.isSelected();
+    }
+    
+    public void setCanSendRequest(boolean canModifyUsers){
+        this.jCheckBoxCanSendRequest.setSelected(canModifyUsers);
+    }
+    
     /**
      * Creates new form PanelUserData
      */
     public PanelUserData() {
         initComponents();
+        this.sc = ServerConnection.getInstance();
+        this.sc.setJCheckBoxCanSendRequest(jCheckBoxCanSendRequest);
+        this.sc.setJCheckBoxModifyUsers(jCheckBoxModifyUsers);
+        this.sc.setJCheckBoxModifyVehicles(jCheckBoxModifyVehciles);
+        this.sc.setJTextFieldLogin(jTextFieldLogin);
+        this.sc.setJPasswordFieldPassword(jPasswordFieldPassword);
+        this.sc.setJPasswordFieldPasswordPassword(jPasswordFieldPasswordConfirm);
     }
 
     /**
@@ -37,20 +97,39 @@ public class PanelUserData extends javax.swing.JPanel {
         jLabelHelpSavePassword1 = new javax.swing.JLabel();
         jLabelUserRights = new javax.swing.JLabel();
         jCheckBoxModifyUsers = new javax.swing.JCheckBox();
-        jCheckBoxModifyAccessRights = new javax.swing.JCheckBox();
+        jCheckBoxCanSendRequest = new javax.swing.JCheckBox();
         jCheckBoxModifyVehciles = new javax.swing.JCheckBox();
         jLabelHelpPasswordConfirm = new javax.swing.JLabel();
         jLabelHelpPassword = new javax.swing.JLabel();
         jLabelPasswordsDoNotMatch = new javax.swing.JLabel();
+        jLabeNoUserNameProvided = new javax.swing.JLabel();
 
         jLabelLogin.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabelLogin.setText("Login Name:");
 
+        jTextFieldLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldLoginActionPerformed(evt);
+            }
+        });
+
         jLabelPassword.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabelPassword.setText("Password:");
 
+        jPasswordFieldPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordFieldPasswordActionPerformed(evt);
+            }
+        });
+
         jLabelConfirmPassword.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabelConfirmPassword.setText("Confirm Password:");
+
+        jPasswordFieldPasswordConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordFieldPasswordConfirmActionPerformed(evt);
+            }
+        });
 
         jLabelHelpSavePassword.setText("Consider using a password with 8 or more characters with mixed");
 
@@ -61,7 +140,7 @@ public class PanelUserData extends javax.swing.JPanel {
 
         jCheckBoxModifyUsers.setText("Add/Modify/Delete Users");
 
-        jCheckBoxModifyAccessRights.setText("Change Vehicle Access Rights");
+        jCheckBoxCanSendRequest.setText("Send Requests");
 
         jCheckBoxModifyVehciles.setText("Add/Modify/Delete Vehicles");
 
@@ -71,7 +150,10 @@ public class PanelUserData extends javax.swing.JPanel {
 
         jLabelPasswordsDoNotMatch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelPasswordsDoNotMatch.setForeground(new java.awt.Color(255, 51, 51));
-        jLabelPasswordsDoNotMatch.setText("The two provided passwords are not identical. Please Provide new password.");
+
+        jLabeNoUserNameProvided.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabeNoUserNameProvided.setForeground(new java.awt.Color(255, 51, 51));
+        jLabeNoUserNameProvided.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -93,7 +175,7 @@ public class PanelUserData extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBoxModifyAccessRights)
+                                    .addComponent(jCheckBoxCanSendRequest)
                                     .addComponent(jCheckBoxModifyVehciles)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabelHelpSavePassword1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -109,7 +191,10 @@ public class PanelUserData extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabelHelpPassword)
                                     .addComponent(jLabelHelpPasswordConfirm))))
-                        .addGap(215, 215, 215))))
+                        .addGap(215, 215, 215))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabeNoUserNameProvided, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,21 +221,36 @@ public class PanelUserData extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelUserRights)
                     .addComponent(jCheckBoxModifyUsers))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxModifyAccessRights)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBoxModifyVehciles)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxCanSendRequest)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addComponent(jLabeNoUserNameProvided)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPasswordsDoNotMatch)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTextFieldLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldLoginActionPerformed
+        this.jLabeNoUserNameProvided.setVisible(false);
+    }//GEN-LAST:event_jTextFieldLoginActionPerformed
+
+    private void jPasswordFieldPasswordConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordConfirmActionPerformed
+        this.jLabelPasswordsDoNotMatch.setVisible(false);
+    }//GEN-LAST:event_jPasswordFieldPasswordConfirmActionPerformed
+
+    private void jPasswordFieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordActionPerformed
+        this.jLabelPasswordsDoNotMatch.setVisible(false);
+    }//GEN-LAST:event_jPasswordFieldPasswordActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBoxModifyAccessRights;
+    private javax.swing.JCheckBox jCheckBoxCanSendRequest;
     private javax.swing.JCheckBox jCheckBoxModifyUsers;
     private javax.swing.JCheckBox jCheckBoxModifyVehciles;
+    private javax.swing.JLabel jLabeNoUserNameProvided;
     private javax.swing.JLabel jLabelConfirmPassword;
     private javax.swing.JLabel jLabelHelpPassword;
     private javax.swing.JLabel jLabelHelpPasswordConfirm;

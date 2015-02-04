@@ -5,19 +5,25 @@
  */
 package v2gCommunication.client.ui;
 
-import v2gCommunication.client.ClientMethods;
+import v2gCommunication.client.ServerConnection;
+
 
 /**
  *
  * @author alexander
  */
 public class PanelUserManagement extends javax.swing.JPanel {
-
+    
+    ServerConnection sc;
     /**
      * Creates new form NewUserManagement
      */
     public PanelUserManagement() {
         initComponents();
+        this.sc = ServerConnection.getInstance();
+        sc.setJListUsers(jListUsers);
+        jTabbedPaneAccountData.add(panelUserData1,"User data");
+        
     }
 
     /**
@@ -40,8 +46,6 @@ public class PanelUserManagement extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jListUsers = new javax.swing.JList();
         jTabbedPaneAccountData = new javax.swing.JTabbedPane();
-        panelUserData1 = new v2gCommunication.client.ui.PanelUserData();
-        panelVehicleAccess1 = new v2gCommunication.client.ui.PanelVehicleAccess();
 
         jLabelUserHeading.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelUserHeading.setText("Users and Privileges");
@@ -69,9 +73,23 @@ public class PanelUserManagement extends javax.swing.JPanel {
             }
         });
 
+        jSplitPane1.setDividerLocation(150);
+
         jLabel1.setText("User Accounts");
 
+        jListUsers.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item1", "Item2", "Item3" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jListUsers.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListUsersMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jListUsers);
+        jListUsers.getAccessibleContext().setAccessibleDescription("");
 
         javax.swing.GroupLayout jPanelUserListLayout = new javax.swing.GroupLayout(jPanelUserList);
         jPanelUserList.setLayout(jPanelUserListLayout);
@@ -89,10 +107,6 @@ public class PanelUserManagement extends javax.swing.JPanel {
         );
 
         jSplitPane1.setLeftComponent(jPanelUserList);
-
-        jTabbedPaneAccountData.addTab("Account Settings", panelUserData1);
-        jTabbedPaneAccountData.addTab("Vehicle Access", panelVehicleAccess1);
-
         jSplitPane1.setRightComponent(jTabbedPaneAccountData);
         jTabbedPaneAccountData.getAccessibleContext().setAccessibleName("User ");
 
@@ -111,7 +125,7 @@ public class PanelUserManagement extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabelUserHeading)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,7 +134,7 @@ public class PanelUserManagement extends javax.swing.JPanel {
                     .addComponent(jLabelUserHeading)
                     .addComponent(jLabelUserIcon))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .addComponent(jSplitPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddAccount)
@@ -133,16 +147,46 @@ public class PanelUserManagement extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAlppyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlppyActionPerformed
-        // TODO add your handling code here:
+        String username = this.panelUserData1.getUserName();
+        String password = this.panelUserData1.getPasswort();
+        boolean canModifyUsers = this.panelUserData1.getCanModfiyUsers();
+        boolean canModifyVehicles = this.panelUserData1.getCanModfiyVehicles();
+        boolean canSendRequest = this.panelUserData1.getCanSendRequest();
+        if ((username != null) && (password!=null)){
+            ServerConnection sc = ServerConnection.getInstance();
+            sc.changePassword(username, password);
+        }
+        if (username != null){
+            sc.updateUserRights(username, canModifyUsers, canModifyVehicles, canSendRequest);
+        }
     }//GEN-LAST:event_jButtonAlppyActionPerformed
 
     private void jButtonAddAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddAccountActionPerformed
-        // TODO add your handling code here:
+        String username = this.panelUserData1.getUserName();
+        String password = this.panelUserData1.getPasswort();
+        boolean canModifyUsers = this.panelUserData1.getCanModfiyUsers();
+        boolean canModifyVehicles = this.panelUserData1.getCanModfiyVehicles();
+        boolean canSendRequest = this.panelUserData1.getCanSendRequest();
+        if ((username != null) && (password!=null)){
+            ServerConnection sc = ServerConnection.getInstance();
+            sc.createUser(username, password, canModifyUsers, 
+                    canModifyVehicles, canSendRequest);
+        }    
     }//GEN-LAST:event_jButtonAddAccountActionPerformed
 
     private void jButtonDeleteAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteAccountActionPerformed
-        // TODO add your handling code here:
+        String username = (String) this.jListUsers.getSelectedValue();
+        if (username != null){
+            sc.deleteUser(username);
+        }
     }//GEN-LAST:event_jButtonDeleteAccountActionPerformed
+
+    private void jListUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListUsersMouseClicked
+        String username = (String) this.jListUsers.getSelectedValue();
+        if (username != null){
+            sc.getUserRights(username);
+        }
+    }//GEN-LAST:event_jListUsersMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -157,7 +201,7 @@ public class PanelUserManagement extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedPaneAccountData;
-    private v2gCommunication.client.ui.PanelUserData panelUserData1;
-    private v2gCommunication.client.ui.PanelVehicleAccess panelVehicleAccess1;
     // End of variables declaration//GEN-END:variables
+    private PanelUserData panelUserData1 = new PanelUserData();
 }
+

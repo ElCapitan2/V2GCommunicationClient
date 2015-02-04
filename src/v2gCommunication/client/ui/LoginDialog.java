@@ -5,7 +5,6 @@
  */
 package v2gCommunication.client.ui;
 
-import v2gCommunication.client.ClientMethods;
 
 /**
  *
